@@ -20,9 +20,9 @@ public class JavaProject extends Application {
         // UI Components for Login Page
 
 	//Image image=new Image("d:/usericon.jpeg");
-        TextField usernameField = createTextField("Username", 230, 200);
-        PasswordField passwordField = createPasswordField("Password", 230, 250);
-        Button loginButton = createButton("LOGIN", 260, 370);
+        TextField usernameField = createTextField("Username", 230, 340);
+        PasswordField passwordField = createPasswordField("Password", 230, 420);
+        Button loginButton = createButton("LOGIN", 280, 500);
 
         // Set Login Button Action
         loginButton.setOnAction(event -> {
@@ -44,7 +44,8 @@ public class JavaProject extends Application {
 
 
     private Scene createSearchPage(Stage primaryStage) {
-	
+
+	TextField t1=new TextField("Enter batch number ");
         Label welcomeLabel = createLabel("Welcome to the Search Page!", 200, 200);
         Button logoutButton = createButton("Logout", 260, 300);
 
@@ -53,7 +54,7 @@ public class JavaProject extends Application {
 
         // Layout and Scene Setup
         AnchorPane searchLayout = new AnchorPane();
-        searchLayout.getChildren().addAll(welcomeLabel, logoutButton);
+        searchLayout.getChildren().addAll(welcomeLabel, logoutButton,t1);
         return new Scene(searchLayout, 600, 700);
     }
 
