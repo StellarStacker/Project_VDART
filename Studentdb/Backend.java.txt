@@ -1,6 +1,0 @@
-import java.sql.*;
-
-class Main{
-	
-	public void call(){
-		Class.forName("sqllite2.org;")
