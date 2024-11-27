@@ -159,11 +159,13 @@ public class MyJavaProject extends Application {
             switch(event.getCode()){
                 case ESCAPE:
                     primaryStage.setScene(createLoginPage(primaryStage));
+                    break;
                 case ENTER:
                     if(promptedbycreate){
                         promptedbycreate=false;
                         System.out.println("Already prompted by create");
-                    }else if(!searchfield.getText().equals("")){ 
+                    }else
+                    if(!searchfield.getText().equals("")){ 
                         System.out.println("Handling scene level enter key for search");
              
                         try {
@@ -180,9 +182,11 @@ public class MyJavaProject extends Application {
                         }
                     }else{
                            showAlert("Empty field","Kindly make sure you enter batchnumber before hitting search");
-                        }      
+                        } 
+                        break;
                     default:
                         System.out.println("Default case handed");
+                        break;
             }    
         });
         return scene;
@@ -191,7 +195,7 @@ public class MyJavaProject extends Application {
     AnchorPane entryLayout = new AnchorPane();
     entryLayout.setStyle("-fx-background-color: #FFC5BF;");
     // Title label
-    Label title = createLabel("STUDENT DATA", 420, 20);
+    Label title = createLabel("STUDENT DATA", 400, 20);
 
     // Upload button
     Button b1 = new Button("CLOSE");
@@ -234,6 +238,21 @@ public class MyJavaProject extends Application {
     Label l11 = createLabel("CW3301", l6.getLayoutX(), l10.getLayoutY() + 80);
     TextArea t11 = createTextArea(String.valueOf(rob.geteco()), l11.getLayoutX() + 80, l11.getLayoutY() - 5);
     
+    l1.setFont(fontify(l1.getText()));
+    l2.setFont(fontify(l2.getText()));
+    l3.setFont(fontify(l3.getText()));
+    l4.setFont(fontify(l4.getText()));
+    l5.setFont(fontify(l5.getText()));
+    l6.setFont(fontify(l6.getText()));
+    l7.setFont(fontify(l7.getText()));
+    l8.setFont(fontify(l8.getText()));
+    l9.setFont(fontify(l9.getText()));
+    l10.setFont(fontify(l10.getText()));
+    l11.setFont(fontify(l11.getText()));
+    title.setFont(Font.font("Arial",FontWeight.EXTRA_BOLD,20));
+
+    
+    b1.setDefaultButton(true);
     // Adding all elements to the layout
     entryLayout.getChildren().addAll(
         l1, t1, l2, t2, l3, t3, l4, t4, l5, t5,
@@ -247,9 +266,21 @@ public class MyJavaProject extends Application {
             Logger.getLogger(MyJavaProject.class.getName()).log(Level.SEVERE, null, ex);
         }
     });
-    // Return the scene
-    return new Scene(entryLayout, 1000, 600);
-}
+    Scene viewscene=new Scene(entryLayout, 1000, 600);
+    
+    viewscene.setOnKeyPressed(event->{
+      if(event.getCode()==KeyCode.ESCAPE){
+          System.out.println("Escaped pressed");
+          b1.fire();
+      }
+      if(event.getCode()==KeyCode.ENTER){
+          System.out.println("Enter pressed");
+          b1.fire();
+      }
+      
+    });
+    return viewscene;
+ }
 
     private Scene Entrypage(Stage primaryStage){
             
@@ -299,7 +330,7 @@ public class MyJavaProject extends Application {
         l11=createLabel("CW3301",l6.getLayoutX(),l10.getLayoutY()+80);
         t11=createTextField("Enter Economics mark",l11.getLayoutX()+80,l11.getLayoutY()-5);
         
-        
+        //Converting enchancing all label
         l1.setFont(fontify(l1.getText()));
         l2.setFont(fontify(l2.getText()));
         l3.setFont(fontify(l3.getText()));
