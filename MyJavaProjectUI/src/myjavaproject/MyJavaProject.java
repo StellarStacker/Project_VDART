@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
@@ -45,11 +46,16 @@ public class MyJavaProject extends Application {
         usernameField.setPrefWidth(150);
         PasswordField passwordField = createPasswordField("Password", 420, 400);
         passwordField.setPrefWidth(149);
-        CheckBox c1=new CheckBox("Show password");
         
-        c1.setLayoutX(passwordField.getLayoutX()+20);
-        c1.setLayoutY(passwordField.getLayoutY()+45);
-        Button loginButton = createButton("LOGIN", 468, 495);
+        CheckBox c1=new CheckBox("Show password");
+        c1.setFont(Font.font("Arial",FontWeight.MEDIUM,15));
+        c1.setLayoutX(passwordField.getLayoutX()+8);
+        c1.setLayoutY(passwordField.getLayoutY()+47);
+        
+        Button loginButton = createButton("LOGIN", 460, 495);
+        loginButton.setFont(fontify(loginButton.getText()));
+        
+        loginButton.setStyle("-fx-background-color: #007BFF;");
            
         TextField sh=new TextField();
         sh.setPromptText("Password");
@@ -65,13 +71,19 @@ public class MyJavaProject extends Application {
             }else{
                 passwordField.setText(sh.getText());
                 passwordField.setVisible(true);
-                sh.setVisible(false);
-                
+                sh.setVisible(false);  
             }
         });
         loginButton.setOnAction(event -> {
+          
             String username = usernameField.getText();
-            String password = passwordField.getText();
+            System.out.println("pass"+passwordField.getText());
+            System.out.println("textfield"+sh.getText());
+            String password = (!(passwordField.getText().equals("")))||(!(passwordField.getText().equals(""))) ? passwordField.getText():sh.getText(); 
+            //minor bug rectified as pervious line                                                                                                                                     
+            //where showpassword box if first checked leads to a empty string.                                                                                                                                  
+            //so just used a ternary operator to assign the actual hidden string
+             System.out.println("Recieved String is : "+password);
             if (authenticateUser(username, password)) {
                 try {
                     primaryStage.setScene(createSearchPage(primaryStage));
@@ -359,10 +371,7 @@ public class MyJavaProject extends Application {
     {
       return Font.font("Arial", FontWeight.BOLD,15);
     }
-    public static void main(String[] args) {
-        launch(args);
-    }
-
+    
     private boolean isEmpty() {
       TextField arr[]={t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11};
       for(TextField i :arr){
@@ -370,5 +379,11 @@ public class MyJavaProject extends Application {
               return true;
       }
       return false;
-    } 
+    }
+    
+    //Driver
+      public static void main(String[] args) {
+        launch(args);
+    }
+
 }
