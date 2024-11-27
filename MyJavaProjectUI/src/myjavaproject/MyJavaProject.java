@@ -18,6 +18,7 @@ public class MyJavaProject extends Application {
         Label l1,l2,l3,l4,l5,l6,l7,l8,l9,l10,l11,title;
         TextField t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11;
         TextArea t12,t13,t14,t15,t16,t17,t18,t19,t20,t21,t22;
+        boolean promptedbycreate=false;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -122,12 +123,7 @@ public class MyJavaProject extends Application {
         // Set Logout Button Action
         logoutButton.setOnAction(event -> primaryStage.setScene(createLoginPage(primaryStage)));
         
-        logoutButton.setOnKeyPressed(event->{
-            if(event.getCode()==KeyCode.ESCAPE || event.getCode()==KeyCode.ENTER){
-             primaryStage.setScene(createLoginPage(primaryStage));
-             System.out.println("hi");
-            }
-        });
+        
         search.setOnAction(event->{
             System.out.println(searchfield.getText());
             if(!searchfield.getText().equals("")){
@@ -145,14 +141,51 @@ public class MyJavaProject extends Application {
                 showAlert("Empty field","Kindly make sure you enter batchnumber before hitting search");
             }
         });
+        create.setOnKeyPressed(event->{
+            if(event.getCode()==KeyCode.ENTER){
+             promptedbycreate=true;
+            primaryStage.setScene(Entrypage(primaryStage));
+            }
+        });
         create.setOnAction(event->{
             primaryStage.setScene(Entrypage(primaryStage));
-            
         });
         // Layout and Scene Setup
+        
        
         searchLayout.getChildren().addAll(welcomeLabel,search,logoutButton,searchfield,create);
-        return new Scene(searchLayout,1000,600);
+        Scene scene=new Scene(searchLayout,1000,600);
+        scene.setOnKeyPressed(event->{
+            switch(event.getCode()){
+                case ESCAPE:
+                    primaryStage.setScene(createLoginPage(primaryStage));
+                case ENTER:
+                    if(promptedbycreate){
+                        promptedbycreate=false;
+                        System.out.println("Already prompted by create");
+                    }else if(!searchfield.getText().equals("")){ 
+                        System.out.println("Handling scene level enter key for search");
+             
+                        try {
+                            Backend ob=new Backend();
+                            int batch=Integer.parseInt(searchfield.getText());
+                            ob.getdata(batch);
+                            primaryStage.setScene(ViewPage(primaryStage,ob.getobject()));//redirecting to viewpage
+                        } catch (ClassNotFoundException ex) {
+                            Logger.getLogger(MyJavaProject.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(MyJavaProject.class.getName()).log(Level.SEVERE, null, ex);
+                        }finally{
+                             promptedbycreate=false;
+                        }
+                    }else{
+                           showAlert("Empty field","Kindly make sure you enter batchnumber before hitting search");
+                        }      
+                    default:
+                        System.out.println("Default case handed");
+            }    
+        });
+        return scene;
     }
  private Scene ViewPage(Stage primaryStage,GetStudent rob ) {
     AnchorPane entryLayout = new AnchorPane();
@@ -218,8 +251,6 @@ public class MyJavaProject extends Application {
     return new Scene(entryLayout, 1000, 600);
 }
 
-
-
     private Scene Entrypage(Stage primaryStage){
             
         AnchorPane viewLayout=new AnchorPane();
@@ -282,8 +313,6 @@ public class MyJavaProject extends Application {
         l11.setFont(fontify(l11.getText()));
         title.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD,17));
         
-        
-        
         b1.setOnAction(event->{
             try {
                 if(!isEmpty()){
@@ -308,12 +337,9 @@ public class MyJavaProject extends Application {
             }
        });
         viewLayout.getChildren().addAll(l1,l2,l3,l4,l5,l6,l7,l8,l9,l10,l11,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,b1,b2,title);
-       
         
-      
         return new Scene(viewLayout,1000,600);
     }
-
     private boolean authenticateUser(String username, String password) {
 
         return "admin".equals(username) && "admin".equals(password);
