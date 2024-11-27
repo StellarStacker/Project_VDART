@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
@@ -74,8 +75,10 @@ public class MyJavaProject extends Application {
                 sh.setVisible(false);  
             }
         });
+        loginButton.setDefaultButton(true);
         loginButton.setOnAction(event -> {
-          
+            
+            
             String username = usernameField.getText();
             System.out.println("pass"+passwordField.getText());
             System.out.println("textfield"+sh.getText());
@@ -118,6 +121,13 @@ public class MyJavaProject extends Application {
         Button create=createButton("CREATE",510,360);
         // Set Logout Button Action
         logoutButton.setOnAction(event -> primaryStage.setScene(createLoginPage(primaryStage)));
+        
+        logoutButton.setOnKeyPressed(event->{
+            if(event.getCode()==KeyCode.ESCAPE || event.getCode()==KeyCode.ENTER){
+             primaryStage.setScene(createLoginPage(primaryStage));
+             System.out.println("hi");
+            }
+        });
         search.setOnAction(event->{
             System.out.println(searchfield.getText());
             if(!searchfield.getText().equals("")){
