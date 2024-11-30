@@ -111,15 +111,20 @@ public class MyJavaProject extends Application {
 	
         AnchorPane searchLayout = new AnchorPane();
         searchLayout.setStyle("-fx-background-color: #DADDF0;");
-        TextField searchfield=createTextField("Enter batch number ",425,300);
-        Label welcomeLabel = createLabel("WELCOME TO SEARCH PAGE",400,250);
-        welcomeLabel.setFont(Font.font("Arial",FontWeight.BOLD,14));
+        TextField searchfield=createTextField("Enter batch number ",400,300);
+        searchfield.setPrefSize(200,30);
+        Label welcomeLabel = createLabel("WELCOME TO SEARCH PAGE",360,230);
+        welcomeLabel.setFont(Font.font("Arial",FontWeight.EXTRA_BOLD,15));
+        welcomeLabel.setFont(Font.font("Arial",FontWeight.EXTRA_BOLD,20));
                 
                 
         
-        Button search=createButton("SEARCH",420,360);
+        Button search=createButton("SEARCH",400,370);
+        search.setFont(Font.font("Arial",FontWeight.EXTRA_BOLD,15));
         Button logoutButton = createButton("Back",40,50);
-        Button create=createButton("CREATE",510,360);
+        logoutButton.setFont(Font.font("Arial",FontWeight.EXTRA_BOLD,15));
+        Button create=createButton("CREATE",510,370);
+        create.setFont(Font.font("Arial",FontWeight.EXTRA_BOLD,15));
         // Set Logout Button Action
         logoutButton.setOnAction(event -> primaryStage.setScene(createLoginPage(primaryStage)));
         
