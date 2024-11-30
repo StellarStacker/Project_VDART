@@ -7,8 +7,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
@@ -16,6 +18,7 @@ public class MyJavaProject extends Application {
         Label l1,l2,l3,l4,l5,l6,l7,l8,l9,l10,l11,title;
         TextField t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11;
         TextArea t12,t13,t14,t15,t16,t17,t18,t19,t20,t21,t22;
+        boolean promptedbycreate=false;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -45,11 +48,16 @@ public class MyJavaProject extends Application {
         usernameField.setPrefWidth(150);
         PasswordField passwordField = createPasswordField("Password", 420, 400);
         passwordField.setPrefWidth(149);
-        CheckBox c1=new CheckBox("Show password");
         
-        c1.setLayoutX(passwordField.getLayoutX()+20);
-        c1.setLayoutY(passwordField.getLayoutY()+45);
-        Button loginButton = createButton("LOGIN", 468, 495);
+        CheckBox c1=new CheckBox("Show password");
+        c1.setFont(Font.font("Arial",FontWeight.MEDIUM,15));
+        c1.setLayoutX(passwordField.getLayoutX()+8);
+        c1.setLayoutY(passwordField.getLayoutY()+47);
+        
+        Button loginButton = createButton("LOGIN", 460, 495);
+        loginButton.setFont(fontify(loginButton.getText()));
+        
+        loginButton.setStyle("-fx-background-color: #007BFF;");
            
         TextField sh=new TextField();
         sh.setPromptText("Password");
@@ -65,13 +73,21 @@ public class MyJavaProject extends Application {
             }else{
                 passwordField.setText(sh.getText());
                 passwordField.setVisible(true);
-                sh.setVisible(false);
-                
+                sh.setVisible(false);  
             }
         });
+        loginButton.setDefaultButton(true);
         loginButton.setOnAction(event -> {
+            
+            
             String username = usernameField.getText();
-            String password = passwordField.getText();
+            System.out.println("pass"+passwordField.getText());
+            System.out.println("textfield"+sh.getText());
+            String password = (!(passwordField.getText().equals("")))||(!(passwordField.getText().equals(""))) ? passwordField.getText():sh.getText(); 
+            //minor bug rectified as pervious line                                                                                                                                     
+            //where showpassword box if first checked leads to a empty string.                                                                                                                                  
+            //so just used a ternary operator to assign the actual hidden string
+             System.out.println("Recieved String is : "+password);
             if (authenticateUser(username, password)) {
                 try {
                     primaryStage.setScene(createSearchPage(primaryStage));
@@ -106,6 +122,8 @@ public class MyJavaProject extends Application {
         Button create=createButton("CREATE",510,360);
         // Set Logout Button Action
         logoutButton.setOnAction(event -> primaryStage.setScene(createLoginPage(primaryStage)));
+        
+        
         search.setOnAction(event->{
             System.out.println(searchfield.getText());
             if(!searchfield.getText().equals("")){
@@ -123,20 +141,61 @@ public class MyJavaProject extends Application {
                 showAlert("Empty field","Kindly make sure you enter batchnumber before hitting search");
             }
         });
+        create.setOnKeyPressed(event->{
+            if(event.getCode()==KeyCode.ENTER){
+             promptedbycreate=true;
+            primaryStage.setScene(Entrypage(primaryStage));
+            }
+        });
         create.setOnAction(event->{
             primaryStage.setScene(Entrypage(primaryStage));
-            
         });
         // Layout and Scene Setup
+        
        
         searchLayout.getChildren().addAll(welcomeLabel,search,logoutButton,searchfield,create);
-        return new Scene(searchLayout,1000,600);
+        Scene scene=new Scene(searchLayout,1000,600);
+        scene.setOnKeyPressed(event->{
+            switch(event.getCode()){
+                case ESCAPE:
+                    primaryStage.setScene(createLoginPage(primaryStage));
+                    break;
+                case ENTER:
+                    if(promptedbycreate){
+                        promptedbycreate=false;
+                        System.out.println("Already prompted by create");
+                    }else
+                    if(!searchfield.getText().equals("")){ 
+                        System.out.println("Handling scene level enter key for search");
+             
+                        try {
+                            Backend ob=new Backend();
+                            int batch=Integer.parseInt(searchfield.getText());
+                            ob.getdata(batch);
+                            primaryStage.setScene(ViewPage(primaryStage,ob.getobject()));//redirecting to viewpage
+                        } catch (ClassNotFoundException ex) {
+                            Logger.getLogger(MyJavaProject.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(MyJavaProject.class.getName()).log(Level.SEVERE, null, ex);
+                        }finally{
+                             promptedbycreate=false;
+                        }
+                    }else{
+                           showAlert("Empty field","Kindly make sure you enter batchnumber before hitting search");
+                        } 
+                        break;
+                    default:
+                        System.out.println("Default case handed");
+                        break;
+            }    
+        });
+        return scene;
     }
  private Scene ViewPage(Stage primaryStage,GetStudent rob ) {
     AnchorPane entryLayout = new AnchorPane();
     entryLayout.setStyle("-fx-background-color: #FFC5BF;");
     // Title label
-    Label title = createLabel("STUDENT DATA", 420, 20);
+    Label title = createLabel("STUDENT DATA", 400, 20);
 
     // Upload button
     Button b1 = new Button("CLOSE");
@@ -179,6 +238,21 @@ public class MyJavaProject extends Application {
     Label l11 = createLabel("CW3301", l6.getLayoutX(), l10.getLayoutY() + 80);
     TextArea t11 = createTextArea(String.valueOf(rob.geteco()), l11.getLayoutX() + 80, l11.getLayoutY() - 5);
     
+    l1.setFont(fontify(l1.getText()));
+    l2.setFont(fontify(l2.getText()));
+    l3.setFont(fontify(l3.getText()));
+    l4.setFont(fontify(l4.getText()));
+    l5.setFont(fontify(l5.getText()));
+    l6.setFont(fontify(l6.getText()));
+    l7.setFont(fontify(l7.getText()));
+    l8.setFont(fontify(l8.getText()));
+    l9.setFont(fontify(l9.getText()));
+    l10.setFont(fontify(l10.getText()));
+    l11.setFont(fontify(l11.getText()));
+    title.setFont(Font.font("Arial",FontWeight.EXTRA_BOLD,20));
+
+    
+    b1.setDefaultButton(true);
     // Adding all elements to the layout
     entryLayout.getChildren().addAll(
         l1, t1, l2, t2, l3, t3, l4, t4, l5, t5,
@@ -192,11 +266,21 @@ public class MyJavaProject extends Application {
             Logger.getLogger(MyJavaProject.class.getName()).log(Level.SEVERE, null, ex);
         }
     });
-    // Return the scene
-    return new Scene(entryLayout, 1000, 600);
-}
-
-
+    Scene viewscene=new Scene(entryLayout, 1000, 600);
+    
+    viewscene.setOnKeyPressed(event->{
+      if(event.getCode()==KeyCode.ESCAPE){
+          System.out.println("Escaped pressed");
+          b1.fire();
+      }
+      if(event.getCode()==KeyCode.ENTER){
+          System.out.println("Enter pressed");
+          b1.fire();
+      }
+      
+    });
+    return viewscene;
+ }
 
     private Scene Entrypage(Stage primaryStage){
             
@@ -246,7 +330,7 @@ public class MyJavaProject extends Application {
         l11=createLabel("CW3301",l6.getLayoutX(),l10.getLayoutY()+80);
         t11=createTextField("Enter Economics mark",l11.getLayoutX()+80,l11.getLayoutY()-5);
         
-        
+        //Converting enchancing all label
         l1.setFont(fontify(l1.getText()));
         l2.setFont(fontify(l2.getText()));
         l3.setFont(fontify(l3.getText()));
@@ -259,8 +343,6 @@ public class MyJavaProject extends Application {
         l10.setFont(fontify(l10.getText()));
         l11.setFont(fontify(l11.getText()));
         title.setFont(Font.font("Arial", FontWeight.EXTRA_BOLD,17));
-        
-        
         
         b1.setOnAction(event->{
             try {
@@ -286,12 +368,9 @@ public class MyJavaProject extends Application {
             }
        });
         viewLayout.getChildren().addAll(l1,l2,l3,l4,l5,l6,l7,l8,l9,l10,l11,t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,b1,b2,title);
-       
         
-      
         return new Scene(viewLayout,1000,600);
     }
-
     private boolean authenticateUser(String username, String password) {
 
         return "admin".equals(username) && "admin".equals(password);
@@ -359,10 +438,7 @@ public class MyJavaProject extends Application {
     {
       return Font.font("Arial", FontWeight.BOLD,15);
     }
-    public static void main(String[] args) {
-        launch(args);
-    }
-
+    
     private boolean isEmpty() {
       TextField arr[]={t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11};
       for(TextField i :arr){
@@ -370,5 +446,11 @@ public class MyJavaProject extends Application {
               return true;
       }
       return false;
-    } 
+    }
+    
+    //Driver
+      public static void main(String[] args) {
+        launch(args);
+    }
+
 }
