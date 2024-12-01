@@ -33,7 +33,6 @@ public class GetStudent {
         }else{
             System.out.println("Resultset is null");
         }
-    
     }
     public String getname(){
         return name;

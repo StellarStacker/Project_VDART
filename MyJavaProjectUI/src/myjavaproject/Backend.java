@@ -10,6 +10,8 @@ package myjavaproject;
  * @author Admin
  */
 import java.sql.*;
+import java.time.LocalDateTime;
+
 
 public class Backend {
     Connection c=null;
@@ -31,6 +33,9 @@ public class Backend {
         rs=ps.executeQuery();
         GetStudent ob=new GetStudent(rs);
         this.ob=ob;
+    }
+    public void getlogintime(){
+        
     }
     public GetStudent getobject(){
         return ob;

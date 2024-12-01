@@ -133,14 +133,21 @@ public class MyJavaProject extends Application {
             System.out.println(searchfield.getText());
             if(!searchfield.getText().equals("")){
             try {
-                Backend ob=new Backend();
-                int batch=Integer.parseInt(searchfield.getText());
-                ob.getdata(batch);
-                primaryStage.setScene(ViewPage(primaryStage,ob.getobject()));//redirecting to viewpage
+                    int isbatch=Integer.parseInt(searchfield.getText());
+                    Backend ob=new Backend();
+                    int batch=Integer.parseInt(searchfield.getText());
+                    ob.getdata(batch);
+                    primaryStage.setScene(ViewPage(primaryStage,ob.getobject()));//redirecting to viewpage
+                
             } catch (ClassNotFoundException ex) {
                 Logger.getLogger(MyJavaProject.class.getName()).log(Level.SEVERE, null, ex);
             } catch (SQLException ex) {
                 Logger.getLogger(MyJavaProject.class.getName()).log(Level.SEVERE, null, ex);
+            }catch(NumberFormatException e){
+                Alert alert=new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Type Error");
+                alert.setContentText("Kindly enter in batch number format only ");
+                alert.showAndWait();
             }
             }else{
                 showAlert("Empty field","Kindly make sure you enter batchnumber before hitting search");
@@ -166,33 +173,43 @@ public class MyJavaProject extends Application {
                     primaryStage.setScene(createLoginPage(primaryStage));
                     break;
                 case ENTER:
-                    if(promptedbycreate){
-                        promptedbycreate=false;
-                        System.out.println("Already prompted by create");
-                    }else
-                    if(!searchfield.getText().equals("")){ 
-                        System.out.println("Handling scene level enter key for search");
-             
-                        try {
-                            Backend ob=new Backend();
-                            int batch=Integer.parseInt(searchfield.getText());
-                            ob.getdata(batch);
-                            primaryStage.setScene(ViewPage(primaryStage,ob.getobject()));//redirecting to viewpage
-                        } catch (ClassNotFoundException ex) {
-                            Logger.getLogger(MyJavaProject.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (SQLException ex) {
-                            Logger.getLogger(MyJavaProject.class.getName()).log(Level.SEVERE, null, ex);
-                        }finally{
-                             promptedbycreate=false;
-                        }
-                    }else{
+                    try{
+                        if(searchfield.getText().equals("")){
+                           showAlert("Empty field ","Kindly make sure you are enter batch number before hitting search");
+                        }else{
+                            int isbatch=Integer.parseInt(searchfield.getText());
+                            if(promptedbycreate){
+                                promptedbycreate=false;
+                                System.out.println("Already prompted by create");
+                            }else if(!searchfield.getText().equals("")){ 
+                                System.out.println("Handling scene level enter key for search");
+                            try {
+                                Backend ob=new Backend();
+                                int batch=Integer.parseInt(searchfield.getText());
+                                ob.getdata(batch);
+                                primaryStage.setScene(ViewPage(primaryStage,ob.getobject()));//redirecting to viewpage
+                            } catch (ClassNotFoundException ex) {
+                                Logger.getLogger(MyJavaProject.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (SQLException ex) {
+                                Logger.getLogger(MyJavaProject.class.getName()).log(Level.SEVERE, null, ex);
+                            }finally{
+                                promptedbycreate=false;
+                            }
+                            }else{
                            showAlert("Empty field","Kindly make sure you enter batchnumber before hitting search");
-                        } 
-                        break;
+                            }
+                        }
+                    }catch(NumberFormatException e){
+                            Alert alert=new Alert(Alert.AlertType.ERROR);
+                            alert.setTitle("Type Error");
+                            alert.setContentText("Kindly enter in batch number format only ");
+                            alert.showAndWait();
+                    }
+                    break;
                     default:
                         System.out.println("Default case handed");
                         break;
-            }    
+            }
         });
         return scene;
     }
