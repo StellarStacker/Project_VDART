@@ -22,7 +22,7 @@ public class Backend {
     public Backend() throws ClassNotFoundException,SQLException{
           System.out.println("Connection going to be established");
           Class.forName("org.sqlite.JDBC");
-          c=DriverManager.getConnection("jdbc:sqlite:C:\\sqlite\\Project");
+          c=DriverManager.getConnection("jdbc:sqlite:src/database/Project");
           System.out.println("Connection established");
     }
     public void getdata(int batchno) throws SQLException{
@@ -35,8 +35,10 @@ public class Backend {
         this.ob=ob;
     }
     public void getlogintime(){
-        
-    }
+        //System.out.println(java.time.LocalDateTime.now());
+        System.out.println(java.time.LocalDateTime.now().toString());
+        //System.out.println(time);
+     }
     public GetStudent getobject(){
         return ob;
     }
